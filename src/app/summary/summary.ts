@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IWeatherSummary } from './summary.model';
+import { summaryService } from '../summaryService';
 
 @Component({
   selector: 'app-summary',
@@ -8,11 +9,26 @@ import { IWeatherSummary } from './summary.model';
   styleUrl: './summary.css',
 })
 export class Summary {
-  weatherSummaries: IWeatherSummary[];
-
-  constructor() {
+  weatherSummaries: IWeatherSummary[] = [];
+  constructor(private summaryService: summaryService) {
     // Example data, replace with actual data fetching logic
-    this.weatherSummaries = [
+
+    summaryService.getCurrentWeatherByZIPcode().subscribe((response) => {
+      console.log(response); // Make sure this is triggered!
+      this.weatherSummaries = response.weather.map((item: any) => ({
+        description: item.description,
+        city: response.name,
+        country: response.sys.country,
+        temperature: (response.main.temp - 273.15).toFixed(0), // Converting Kelvin to Celsius
+        humidity: response.main.humidity,
+        pressure: response.main.pressure,
+        windSpeed: response.wind.speed,
+        iconUrl: item.icon + '.png', // Assuming icon is a part of the response
+      }));
+    });
+
+    /*-- hard coded values
+this.weatherSummaries = [
       {
         city: 'New York',
         country: 'USA',
@@ -72,13 +88,14 @@ export class Summary {
         windSpeed: 1,
         description: 'Snowy',
         iconUrl: 'snowy.jpeg',
-      },
+      }
     ];
+    */
+
   }
 
-  getImageUrl(weather:IWeatherSummary){
+  getImageUrl(weather: IWeatherSummary) {
     // Assuming iconUrl is a relative path to the assets folder
-    return '/assets/images/' + weather.iconUrl;
+    return 'src/assets/images/' + weather.description;
   }
-  
 }

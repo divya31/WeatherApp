@@ -1,8 +1,8 @@
 <div class="grid-container">
   <div *ngFor="let weather of weatherSummaries" routerLink="/detail/{{weather.city}}">
-    <p>{{weather.city}} </p>
-    <p>{{weather.country}}</p>
-    <p>temperature: {{weather.temperature}}</p>
+    <p>city: {{weather.city}} </p>
+    <p>country: {{weather.country}}</p>
+    <p>temperature: {{weather.temperature}} degrees</p>
     <img [src]="getImageUrl(weather)" alt={{weather.description}}/>
     <!--iconUrl uses attribute binding and src interpolation -->
   </div>
