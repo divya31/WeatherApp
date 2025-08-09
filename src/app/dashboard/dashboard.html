@@ -1,4 +1,17 @@
 <div class="dashboard"> Dashboard
-    <button class="btn"> Add location</button>
+    <div class="container">
+        <!-- Button that triggers the input field pop-up -->
+        <button class="btn" (click)="toggleInput()"> + Add location</button>
+        <!-- Input field pop-up -->
+        <div *ngIf="isInputVisible" class="popup">
+            <div class="popup-content">
+                <input type="text" [(ngModel)]="zipcode" placeholder="Enter zipcode" maxlength="10"/>
+                <button (click)="submitInput()">Submit</button>
+                <button (click)="toggleInput()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <app-summary></app-summary>
+
 </div>

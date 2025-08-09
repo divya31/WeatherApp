@@ -6,23 +6,28 @@ import { App } from './app';
 import { Dashboard } from './dashboard/dashboard';
 import { Detail } from './detail/detail';
 import { Summary } from './summary/summary';
-import { Search } from './search/search';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';  // <-- Import FormsModule
 
 @NgModule({
   declarations: [
     App,
     Dashboard,
     Detail,
-    Summary,
-    Search
-  ],
+    Summary
+    ],
+
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule
   ],
+
   providers: [
     provideBrowserGlobalErrorListeners()
   ],
+  
   bootstrap: [App]
 })
 export class AppModule { }
