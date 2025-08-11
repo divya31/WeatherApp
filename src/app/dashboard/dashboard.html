@@ -10,8 +10,11 @@
                 <button (click)="toggleInput()">Cancel</button>
             </div>
         </div>
+        <div class="unit-toggle">
+            <button class="unit-button" [class.active]="isCelsius" (click)="toggleUnit()">Celsius (°C)</button>
+            <button class="unit-button" [class.active]="!isCelsius" (click)="toggleUnit()">Fahrenheit (°F)</button>
+        </div>
     </div>
-
-    <app-summary></app-summary>
-
 </div>
+
+<app-summary [unit]="isCelsius ? 'Celsius' : 'Fahrenheit'"></app-summary>

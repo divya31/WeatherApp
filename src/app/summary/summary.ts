@@ -10,6 +10,8 @@ import { summaryService } from '../summaryService';
 })
 export class Summary {
   weatherSummaries: IWeatherSummary[] = [];
+  @Input() unit: string = 'Celsius'; // Get the unit from parent (Celsius or Fahrenheit)
+
   constructor(private summaryService: summaryService) {
     // Example data, replace with actual data fetching logic
 
@@ -31,5 +33,18 @@ export class Summary {
   getImageUrl(weather: IWeatherSummary) {
     // Assuming iconUrl is a relative path to the assets folder
     return 'assets/images/' + weather.iconUrl + '.jpeg';
+  }
+
+  removeWeatherSummary(weather: IWeatherSummary) {
+    this.weatherSummaries = this.weatherSummaries.filter((w) => w !== weather);
+  }
+
+  // Method to convert temperature based on the unit
+  convertTemperature(temp: number): number {
+    if (this.unit === 'Celsius') {
+      return temp; // Celsius
+    } else {
+      return (temp * 9) / 5 + 32; // Fahrenheit
+    }
   }
 }

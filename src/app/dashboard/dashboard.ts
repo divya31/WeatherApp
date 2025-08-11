@@ -46,4 +46,12 @@ export class Dashboard {
     console.log('Input submitted:', this.zipcode);
     this.toggleInput(); // Hide the input field after submission
   }
+  isCelsius: boolean = true; // State for Celsius or Fahrenheit
+  temperatureCelsius: number = 25; // Temperature in Celsius
+
+  // Toggle between Celsius and Fahrenheit
+  toggleUnit() {
+    this.isCelsius = !this.isCelsius;
+  }
+  
 }

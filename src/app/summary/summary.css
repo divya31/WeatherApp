@@ -41,12 +41,22 @@
   }
 }
 
-
-
 .grid-container > div:hover {
   background-color: #cbc5c5;
   transform: scale(1.05);
   transition: transform 0.2s, background-color 0.2s;
+}
+
+.grid-container > div > .red-cross-mark {
+  font-size: 20px; /* Adjust the size of the cross */
+  width = 10px;
+}
+
+.grid-container > div:hover > .red-cross-mark {
+  font-size: 50px; /* Adjust the size of the cross */
+  color: red; /* Red color */
+  font-weight: bold; /* Make the cross bold */
+  cursor: pointer; /* Change cursor to pointer */
 }
 
 .img{

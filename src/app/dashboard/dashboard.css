@@ -6,7 +6,7 @@
 }
 
 .btn{
-    background-color: #1500ff;
+    background-color: #1753e0;
     color: white;
     border: none;
     padding: 10px 30px;
@@ -56,4 +56,35 @@ button {
 
 button:hover {
   background-color: #ddd;
+}
+
+
+/* For the temperature toggle switch */
+
+.unit-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+}
+
+.unit-button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border: 2px solid #333;
+  border-radius: 5px;
+  background-color: #fff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.unit-button.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.unit-button:hover {
+  background-color: #f1f1f1;
 }
