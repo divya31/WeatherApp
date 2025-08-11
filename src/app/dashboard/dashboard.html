@@ -5,7 +5,7 @@
         <!-- Input field pop-up -->
         <div *ngIf="isInputVisible" class="popup">
             <div class="popup-content">
-                <input type="text" [(ngModel)]="zipcode" placeholder="Enter zipcode" maxlength="10"/>
+                <input type="text" [(ngModel)]="zipcode" placeholder="Enter zipcode (10 character max)" maxlength="10"/>
                 <button (click)="submitInput()">Submit</button>
                 <button (click)="toggleInput()">Cancel</button>
             </div>

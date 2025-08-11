@@ -10,19 +10,34 @@ import { summaryService } from '../summaryService';
 export class Dashboard {
   isInputVisible = false; // Flag to toggle the visibility of the input field
   zipcode: string = ''; // Variable to store the entered value
+  weatherSummaries: any;
 
   constructor(private summaryService: summaryService) {}
 
   ngOnInit() {
     console.log('AppComponent initialized');
-    /* this.summaryService.getCurrentWeatherByZIPcode().subscribe(data => {
-      console.log(data);
-    });*/
+    this.summaryService.getCurrentWeatherByZIPcode().subscribe((responses) => {
+      console.log(responses); // Make sure this is triggered!
+      this.weatherSummaries = responses
+        .map((response: any) => {
+          return response.weather.map((item: any) => ({
+            description: item.description,
+            city: response.name,
+            country: response.sys.country,
+            temperature: (response.main.temp - 273.15).toFixed(),
+            humidity: response.main.humidity,
+            pressure: response.main.pressure,
+            windSpeed: response.wind.speed,
+            iconUrl: item.main + '.jpeg',
+          }));
+        })
+        .flat(); // Flatten if each response has an array of weather items
+    });
   }
 
   // Function to toggle the visibility of the input field pop-up
   toggleInput(): void {
-    this.zipcode = '';  // Clear the input value
+    this.zipcode = ''; // Clear the input value
     this.isInputVisible = !this.isInputVisible;
   }
 
