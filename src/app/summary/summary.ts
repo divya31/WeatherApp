@@ -12,21 +12,24 @@ export class Summary {
   weatherSummaries: IWeatherSummary[] = [];
   @Input() unit: string = 'Celsius'; // Get the unit from parent (Celsius or Fahrenheit)
 
-  constructor(private summaryService: summaryService) {
-    // Example data, replace with actual data fetching logic
-
-    this.summaryService.getCurrentWeatherByZIPcode().subscribe((responses) => {
+  constructor(private summaryService: summaryService) {}
+  // Example data, replace with actual data fetching logic
+  ngOnInit() {
+    console.log('AppComponent initialized');
+    this.summaryService.loadInitialData().subscribe((responses) => {
       console.log(responses); // Make sure this is triggered!
-      this.weatherSummaries = responses.map((response: any) => ({
-        description: response.weather[0].description,
-        city: response.name,
-        country: response.sys.country,
-        temperature: (response.main.temp - 273.15).toFixed(0), // Converting Kelvin to Celsius
-        humidity: response.main.humidity,
-        pressure: response.main.pressure,
-        windSpeed: response.wind.speed,
-        iconUrl: response.weather[0].main, // Assuming icon is a part of the response
-      }));
+      this.weatherSummaries = responses
+        .map((response: any) => ({
+          description: response.weather[0].description,
+          city: response.name,
+          country: response.sys.country,
+          temperature: (response.main.temp - 273.15).toFixed(0), // Converting Kelvin to Celsius
+          humidity: response.main.humidity,
+          pressure: response.main.pressure,
+          windSpeed: response.wind.speed,
+          iconUrl: response.weather[0].main, // Assuming icon is a part of the response
+        }))
+        .flat(); // Flatten if each response has an array of weather items;
     });
   }
 

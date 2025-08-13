@@ -5,7 +5,17 @@
         <!-- Input field pop-up -->
         <div *ngIf="isInputVisible" class="popup">
             <div class="popup-content">
+
+                <!-- Dropdown list -->
+                <select [(ngModel)]="selectedCountryCode">
+                    <option value="" disabled>Select a country</option> <!-- Placeholder -->
+                    <option *ngFor="let country of countries" [value]="country.code">
+                        {{ country.country }} ({{ country.code }})
+                    </option>
+                </select>
+
                 <input type="text" [(ngModel)]="zipcode" placeholder="Enter zipcode (10 character max)" maxlength="10"/>
+
                 <button (click)="submitInput()">Submit</button>
                 <button (click)="toggleInput()">Cancel</button>
             </div>
@@ -18,3 +28,5 @@
 </div>
 
 <app-summary [unit]="isCelsius ? 'Celsius' : 'Fahrenheit'"></app-summary>
+
+<!--ng-container *ngComponentOutlet="outletComponent"></ng-container> <!-- This will load the component dynamically -->

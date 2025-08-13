@@ -8,7 +8,7 @@ import { forkJoin, Observable } from 'rxjs';
 export class summaryService {
   constructor(private http: HttpClient) {}
 
-  getCurrentWeatherByZIPcode(): Observable<any> {
+  loadInitialData(): Observable<any> {
     const requests: Observable<any>[] = [
       this.http.get(
         'https://api.openweathermap.org/data/2.5/weather?q=Bangalore,IN&appid=532c57c5edad83e9d001dfb47c6e71ce'
@@ -38,7 +38,14 @@ export class summaryService {
         'https://api.openweathermap.org/data/2.5/weather?q=Tokyo,JP&appid=532c57c5edad83e9d001dfb47c6e71ce'
       ),
     ];
+    return forkJoin(requests);
+  }
 
+  getCurrentWeatherByZIPcode(zipcode: string, countryCode: string): Observable<any> {
+    const apiKey = '532c57c5edad83e9d001dfb47c6e71ce';
+    const url = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},${countryCode}&appid=${apiKey}`;
+    console.log('Fetching weather data for ZIP code:', zipcode, 'and country code:', countryCode);
+    const requests: Observable<any>[] = [this.http.get(url)];
     return forkJoin(requests);
   }
 }
