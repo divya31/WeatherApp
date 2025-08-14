@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { summaryService } from '../summaryService';
 import { Summary } from '../summary/summary';
+import { IWeatherSummary } from '../summary/summary.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,7 @@ export class Dashboard {
   zipcode: string = ''; // Variable to store the entered value
   isCelsius: boolean = true; // State for Celsius or Fahrenheit
   selectedCountryCode: string = ''; // Variable to store the selected country
-  weatherSummaries: any;
+  weatherSummaries: IWeatherSummary[] = []; // Array to hold weather summaries
 
   //outletComponent: any = null; // Variable to store the dynamic component
 
@@ -239,7 +240,7 @@ export class Dashboard {
     this.isCelsius = !this.isCelsius;
   }
 
-  getWeatherByZipCodeAndCountry(): void {
+  getWeatherByZipCodeAndCountry(): void{
     if (this.zipcode && this.selectedCountryCode) {
       this.summaryService
         .getCurrentWeatherByZIPcode(this.zipcode, this.selectedCountryCode)
@@ -250,7 +251,7 @@ export class Dashboard {
             description: weather.weather[0].description,
             city: weather.name,
             country: weather.sys.country,
-            temperature: (weather.main.temp - 273.15).toFixed(),
+            temperature: parseFloat((weather.main.temp - 273.15).toFixed()),
             humidity: weather.main.humidity,
             pressure: weather.main.pressure,
             windSpeed: weather.wind.speed,
@@ -258,5 +259,6 @@ export class Dashboard {
           });
         });
     }
+    
   }
 }
