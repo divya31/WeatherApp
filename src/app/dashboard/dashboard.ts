@@ -20,6 +20,71 @@ export class Dashboard {
 
   //outletComponent: any = null; // Variable to store the dynamic component
 
+  // Example data, replace with actual data fetching logic
+  ngOnInit() {
+    console.log('AppComponent initialized');
+    this.summaryService.loadInitialData().subscribe((responses) => {
+      console.log(responses); // Make sure this is triggered!
+      this.weatherSummaries = responses
+        .map((response: any) => ({
+          description: response.weather[0].description,
+          city: response.name,
+          country: response.sys.country,
+          temperature: (response.main.temp - 273.15).toFixed(0), // Converting Kelvin to Celsius
+          humidity: response.main.humidity,
+          pressure: response.main.pressure,
+          windSpeed: response.wind.speed,
+          iconUrl: response.weather[0].main, // Assuming icon is a part of the response
+        }))
+        .flat(); // Flatten if each response has an array of weather items;
+    });
+  }
+
+  // Function to toggle the visibility of the input field pop-up
+  toggleInput(): void {
+    this.zipcode = ''; // Clear the input value
+    this.selectedCountryCode = ''; // Clear the selected country code
+    this.isInputVisible = !this.isInputVisible;
+  }
+
+  // Function to handle input submission
+  submitInput(): void {
+    console.log('Input submitted:', this.zipcode);
+    this.getWeatherByZipCodeAndCountry();
+    // Dynamically set the component to load
+    //this.outletComponent = Summary;
+    this.toggleInput(); // Hide the input field after submission
+  }
+
+  // Toggle between Celsius and Fahrenheit
+  toggleUnit() {
+    this.isCelsius = !this.isCelsius;
+  }
+
+  getWeatherByZipCodeAndCountry(): any {
+    if (this.zipcode && this.selectedCountryCode) {
+      this.summaryService
+        .getCurrentWeatherByZIPcode(this.zipcode, this.selectedCountryCode)
+        .subscribe((responses) => {
+          console.log('Weather data for ZIP code:', this.zipcode);
+
+          const mappedSummaries = responses.map((response: any) => ({
+            description: response.weather[0].description,
+            city: response.name,
+            country: response.sys.country,
+            temperature: (response.main.temp - 273.15).toFixed(0), // Converting Kelvin to Celsius
+            humidity: response.main.humidity,
+            pressure: response.main.pressure,
+            windSpeed: response.wind.speed,
+            iconUrl: response.weather[0].main, // Assuming icon is a part of the response
+          }));
+
+          // Add each item to the existing array at the beginning
+          this.weatherSummaries.unshift(...mappedSummaries);
+        });
+    }
+  }
+
   // List of countries with their 2-letter country code
   countries = [
     { country: 'Afghanistan', code: 'AF' },
@@ -218,47 +283,4 @@ export class Dashboard {
     { country: 'Zambia', code: 'ZM' },
     { country: 'Zimbabwe', code: 'ZW' },
   ];
-
-  // Function to toggle the visibility of the input field pop-up
-  toggleInput(): void {
-    this.zipcode = ''; // Clear the input value
-    this.selectedCountryCode = ''; // Clear the selected country code
-    this.isInputVisible = !this.isInputVisible;
-  }
-
-  // Function to handle input submission
-  submitInput(): void {
-    console.log('Input submitted:', this.zipcode);
-    this.getWeatherByZipCodeAndCountry();
-    // Dynamically set the component to load
-    //this.outletComponent = Summary;
-    this.toggleInput(); // Hide the input field after submission
-  }
-
-  // Toggle between Celsius and Fahrenheit
-  toggleUnit() {
-    this.isCelsius = !this.isCelsius;
-  }
-
-  getWeatherByZipCodeAndCountry(): void{
-    if (this.zipcode && this.selectedCountryCode) {
-      this.summaryService
-        .getCurrentWeatherByZIPcode(this.zipcode, this.selectedCountryCode)
-        .subscribe((weather) => {
-          console.log('Weather data for ZIP code:', weather);
-          // Add the fetched weather data to the weather summaries
-          this.weatherSummaries.push({
-            description: weather.weather[0].description,
-            city: weather.name,
-            country: weather.sys.country,
-            temperature: parseFloat((weather.main.temp - 273.15).toFixed()),
-            humidity: weather.main.humidity,
-            pressure: weather.main.pressure,
-            windSpeed: weather.wind.speed,
-            iconUrl: weather.weather[0].main,
-          });
-        });
-    }
-    
-  }
 }
