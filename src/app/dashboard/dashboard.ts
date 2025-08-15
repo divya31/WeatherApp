@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { summaryService } from '../summaryService';
 import { Summary } from '../summary/summary';
 import { IWeatherSummary } from '../summary/summary.model';
@@ -13,32 +13,12 @@ export class Dashboard {
   constructor(private summaryService: summaryService) {}
 
   isInputVisible = false; // Flag to toggle the visibility of the input field
-  zipcode: string = ''; // Variable to store the entered value
+  zipcode: string = '';
   isCelsius: boolean = true; // State for Celsius or Fahrenheit
-  selectedCountryCode: string = ''; // Variable to store the selected country
-  weatherSummaries: IWeatherSummary[] = []; // Array to hold weather summaries
+  selectedCountryCode: string = '';
+  @ViewChild(Summary) summary!: Summary;
 
   //outletComponent: any = null; // Variable to store the dynamic component
-
-  // Example data, replace with actual data fetching logic
-  ngOnInit() {
-    console.log('AppComponent initialized');
-    this.summaryService.loadInitialData().subscribe((responses) => {
-      console.log(responses); // Make sure this is triggered!
-      this.weatherSummaries = responses
-        .map((response: any) => ({
-          description: response.weather[0].description,
-          city: response.name,
-          country: response.sys.country,
-          temperature: (response.main.temp - 273.15).toFixed(0), // Converting Kelvin to Celsius
-          humidity: response.main.humidity,
-          pressure: response.main.pressure,
-          windSpeed: response.wind.speed,
-          iconUrl: response.weather[0].main, // Assuming icon is a part of the response
-        }))
-        .flat(); // Flatten if each response has an array of weather items;
-    });
-  }
 
   // Function to toggle the visibility of the input field pop-up
   toggleInput(): void {
@@ -50,7 +30,7 @@ export class Dashboard {
   // Function to handle input submission
   submitInput(): void {
     console.log('Input submitted:', this.zipcode);
-    this.getWeatherByZipCodeAndCountry();
+    this.summary.getWeatherByZipCodeAndCountry();
     // Dynamically set the component to load
     //this.outletComponent = Summary;
     this.toggleInput(); // Hide the input field after submission
@@ -59,30 +39,6 @@ export class Dashboard {
   // Toggle between Celsius and Fahrenheit
   toggleUnit() {
     this.isCelsius = !this.isCelsius;
-  }
-
-  getWeatherByZipCodeAndCountry(): any {
-    if (this.zipcode && this.selectedCountryCode) {
-      this.summaryService
-        .getCurrentWeatherByZIPcode(this.zipcode, this.selectedCountryCode)
-        .subscribe((responses) => {
-          console.log('Weather data for ZIP code:', this.zipcode);
-
-          const mappedSummaries = responses.map((response: any) => ({
-            description: response.weather[0].description,
-            city: response.name,
-            country: response.sys.country,
-            temperature: (response.main.temp - 273.15).toFixed(0), // Converting Kelvin to Celsius
-            humidity: response.main.humidity,
-            pressure: response.main.pressure,
-            windSpeed: response.wind.speed,
-            iconUrl: response.weather[0].main, // Assuming icon is a part of the response
-          }));
-
-          // Add each item to the existing array at the beginning
-          this.weatherSummaries.unshift(...mappedSummaries);
-        });
-    }
   }
 
   // List of countries with their 2-letter country code

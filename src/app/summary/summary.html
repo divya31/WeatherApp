@@ -1,7 +1,10 @@
-
-  <p>City: {{weather.city}} </p>
-  <p>Country: {{weather.country}}</p>
-  <p>Temperature: {{convertTemperature(weather.temperature)}}° {{unit.charAt(0)}}</p>
-  <img [src]="getImageUrl(weather)" alt={{weather.description}} class="img" />
-  <!--iconUrl uses attribute binding and src interpolation -->
-  <div class="red-cross-mark" (click)="removeWeatherSummary(weather)">&times;</div>
+<div class="grid-container">
+  <div *ngFor="let weather of weatherSummaries" routerLink="/detail/{{weather.city}}">
+    <p>City: {{weather.city}}</p>
+    <p>Country: {{weather.country}}</p>
+    <p>Temperature: {{convertTemperature(weather.temperature)}}° {{unit.charAt(0)}}</p>
+    <img [src]="getImageUrl(weather)" alt={{weather.description}} class="img" />
+    <!--iconUrl uses attribute binding and src interpolation -->
+    <div class="red-cross-mark" (click)="removeWeatherSummary(weather)">&times;</div>
+  </div>
+</div>

@@ -9,18 +9,65 @@ import { summaryService } from '../summaryService';
   styleUrl: './summary.css',
 })
 export class Summary {
-  @Input() weather!: IWeatherSummary;
+  constructor(private summaryService: summaryService) {}
   @Input() unit: string = 'Celsius'; // Get the unit from parent (Celsius or Fahrenheit)
+  @Input() zipcode: string = '';
+  @Input() selectedCountryCode: string = '';
 
   weatherSummaries: IWeatherSummary[] = [];
 
-  getImageUrl(weather: IWeatherSummary) {
-    // Assuming iconUrl is a relative path to the assets folder
-    return 'assets/images/' + weather.iconUrl + '.jpeg';
+  // Example data, replace with actual data fetching logic
+  ngOnInit() {
+    console.log('AppComponent initialized');
+    this.summaryService.loadInitialData().subscribe((responses) => {
+      console.log(responses); // Make sure this is triggered!
+      this.weatherSummaries = responses
+        .map((response: any) => ({
+          description: response.weather[0].description,
+          city: response.name,
+          country: response.sys.country,
+          temperature: (response.main.temp - 273.15).toFixed(0), // Converting Kelvin to Celsius
+          humidity: response.main.humidity,
+          pressure: response.main.pressure,
+          windSpeed: response.wind.speed,
+          iconUrl: response.weather[0].main, // Assuming icon is a part of the response
+        }))
+        .flat(); // Flatten if each response has an array of weather items;
+    });
+  }
+
+  getWeatherByZipCodeAndCountry(): any {
+    if (this.zipcode && this.selectedCountryCode) {
+      this.summaryService
+        .getCurrentWeatherByZIPcode(this.zipcode, this.selectedCountryCode)
+        .subscribe((responses) => {
+          console.log('Weather data for ZIP code:', this.zipcode);
+
+          const mappedSummary = responses.map((response: any) => ({
+            description: response.weather[0].description,
+            city: response.name,
+            country: response.sys.country,
+            temperature: (response.main.temp - 273.15).toFixed(0), // Converting Kelvin to Celsius
+            humidity: response.main.humidity,
+            pressure: response.main.pressure,
+            windSpeed: response.wind.speed,
+            iconUrl: response.weather[0].main,
+          }));
+
+          // Add the item to the existing array at the beginning
+          this.weatherSummaries.unshift(...mappedSummary);
+          //this.weatherSummaries.push(...mappedSummary);
+        });
+    }
   }
 
   removeWeatherSummary(weather: IWeatherSummary) {
     this.weatherSummaries = this.weatherSummaries.filter((w) => w !== weather);
+  }
+
+  getImageUrl(weather: IWeatherSummary) {
+    // Assuming iconUrl is a relative path to the assets folder
+    return 'assets/images/' + weather.iconUrl + '.jpeg';
   }
 
   // Method to convert temperature based on the unit

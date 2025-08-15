@@ -1,7 +1,7 @@
 <div class="dashboard"> Dashboard
     <div class="container">
 
-        <!-- Button that triggers the input field pop-up -->
+        <!-- Button that triggers the add location pop-up -->
         <button class="btn" (click)="toggleInput()"> + Add location</button>
 
         <!-- Input field pop-up -->
@@ -27,15 +27,11 @@
             <button class="unit-button" [class.active]="isCelsius" (click)="toggleUnit()">Celsius (°C)</button>
             <button class="unit-button" [class.active]="!isCelsius" (click)="toggleUnit()">Fahrenheit (°F)</button>
         </div>
-
-        <div class="grid-container">
-            <div *ngFor="let weather of weatherSummaries" routerLink="/detail/{{weather.city}}">
-                <app-summary [unit]="isCelsius ? 'Celsius' : 'Fahrenheit'" [weather]="weather"></app-summary>
-            </div>
-        </div>
-
     </div>
 </div>
+
+<app-summary [unit]="isCelsius ? 'Celsius' : 'Fahrenheit'" [zipcode]="zipcode" [selectedCountryCode]="selectedCountryCode"></app-summary>
+
 
 
 <!--ng-container *ngComponentOutlet="outletComponent"></ng-container> <!-- This will load the component dynamically -->
